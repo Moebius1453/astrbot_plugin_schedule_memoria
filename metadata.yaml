@@ -1,6 +1,12 @@
-name: helloworld # 插件唯一识别名，以 astrbot_plugin_ 前缀开头
-display_name: helloworld # 用于展示的名字，可以是方便人类阅读的名字（需要版本 >= v4.5.0，低版本不会报错，请放心填写）
-desc: AstrBot 插件示例。 # 插件简短描述
-version: v1.3.0 # 插件版本号。格式：v1.1.1 或者 v1.1
-author: Soulter # 作者
-repo: https://github.com/Soulter/helloworld # 插件的仓库地址
+name: astrbot_plugin_schedule_memoria
+display_name: 课表记忆
+desc: 抓取教务课表（武夷学院/金智系统），回答"下节课是什么"、"今日课表"，课表变动可随时刷新
+help: |
+  命令：
+  - 设置cookie <cookie字符串>（管理员）：粘贴教务系统浏览器 cookie
+  - 刷新课表（管理员）：重新抓取当前学期课表
+  - 下节课 [周次]：查询下一节课（可指定假设周次）
+  - 今日课表：查看今天全部课程
+version: v0.1.0
+author: Moebius1453
+repo: https://github.com/Moebius1453/astrbot_plugin_schedule_memoria
