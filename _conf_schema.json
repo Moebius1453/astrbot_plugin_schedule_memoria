@@ -1,16 +1,16 @@
 {
   "cookie": {
-    "description": "教务系统浏览器 Cookie（F12 → Application → Cookies → jwxt.wuyiu.edu.cn 复制全部）",
+    "description": "教务浏览器 Cookie（F12→Application→Cookies→jwxt.wuyiu.edu.cn 复制）",
     "type": "string",
     "default": ""
   },
   "semester": {
-    "description": "当前学期（切换学期时修改，如 2026-2027-1）",
+    "description": "当前学期，如 2026-2027-1",
     "type": "string",
     "default": "2026-2027-1"
   },
   "semester_start": {
-    "description": "当前学期开学日，用于推算教学周，格式 2026-09-01",
+    "description": "开学日（推算教学周），格式 2026-09-01",
     "type": "string",
     "default": "2026-09-01"
   }

@@ -6,9 +6,9 @@ from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
 from astrbot.core import AstrBotConfig
 
-import fetcher
-import parse_timetable
-import query_engine
+from . import fetcher
+from . import parse_timetable
+from . import query_engine
 
 
 @register("astrbot_plugin_schedule_memoria", "Moebius1453",
@@ -78,6 +78,44 @@ class ScheduleMemoria(Star):
             )
         except ValueError as e:
             yield event.plain_result(str(e))
+
+    @filter.llm_tool()
+    async def llm_next_class(self, event: AstrMessageEvent, week: int = -1):
+        """查询下一节课是什么。返回课程名、教师、地点、时间。week 参数可指定教学周（如 3），默认当前周。"""
+        tb = self._load_timetable()
+        if not tb:
+            return "课表未加载，请让管理员执行：刷新课表"
+        start = self._semester_start()
+        if not start:
+            return "未配置学期开学日（semester_start），请在插件配置中填写"
+        nxt = query_engine.find_next_class(
+            tb, datetime.now(), start, week if week > 0 else None
+        )
+        if not nxt:
+            return "未来 7 天都没有课"
+        s, e = query_engine.PERIODS[nxt["节次段"]]
+        return (
+            f"下节课：{nxt['课程']}（{nxt['日期']} {s}~{e}，第{nxt['周']}周）\n"
+            f"教师：{nxt['教师']}\n地点：{nxt['地点']}"
+        )
+
+    @filter.llm_tool()
+    async def llm_today_classes(self, event: AstrMessageEvent):
+        """查询今天有什么课。返回今天全部课程（时间/课程/教师/地点）。"""
+        tb = self._load_timetable()
+        if not tb:
+            return "课表未加载，请让管理员执行：刷新课表"
+        start = self._semester_start()
+        if not start:
+            return "未配置学期开学日（semester_start），请在插件配置中填写"
+        classes = query_engine.classes_on(tb, datetime.now(), start)
+        if not classes:
+            return "今天没有课"
+        lines = []
+        for c in classes:
+            s, e = query_engine.PERIODS[c["节次段"]]
+            lines.append(f"{s}~{e} {c['课程']} | {c['教师']} | {c['地点']}")
+        return "今日课表：\n" + "\n".join(lines)
 
     @filter.command("下节课")
     async def next_class(self, event: AstrMessageEvent, week: int = -1):
