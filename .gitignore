@@ -209,3 +209,8 @@ _deploy.js
 _loginNew.js
 _sso_page.html
 _test_*.py
+
+# 逆向/测试素材（_ 前缀一律忽略）
+_*
+!__init__.py
+!_conf_schema.json
